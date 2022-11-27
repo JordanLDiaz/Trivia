@@ -1,6 +1,7 @@
 import { appState } from "../AppState.js";
 import { questionsService } from "../Services/QuestionsService.js";
 import { getFormData } from "../Utils/FormHandler.js";
+import { Pop } from "../Utils/Pop.js";
 import { setHTML, setText } from "../Utils/Writer.js";
 
 
@@ -14,16 +15,20 @@ function _drawQuestions() {
 }
 export class QuestionsController {
   constructor() {
-    console.log('hello from cards controller');
+    // console.log('hello from cards controller');
     this.getQuestions()
     appState.on('questions', _drawQuestions)
   }
 
   async getQuestions() {
-    console.log('getting questions');
-    await questionsService.getQuestions()
-    console.log('got the questions');
-    let activeQuestion = appState.activeQuestion
+    try {
+      console.log('getting questions');
+      await questionsService.getQuestions()
+      console.log('got the questions');
+      let activeQuestion = appState.activeQuestion
+    } catch (error) {
+      Pop.toast(error.message, 'error')
+    }
   }
 
   findAnswer(id) {

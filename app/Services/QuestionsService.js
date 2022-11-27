@@ -1,5 +1,6 @@
 import { appState } from "../AppState.js";
 import { Question } from "../Models/Question.js";
+import { Pop } from "../Utils/Pop.js";
 
 class QuestionsService {
 
@@ -15,12 +16,15 @@ class QuestionsService {
   }
 
   findAnswer(answer, id) {
-    debugger
+    // debugger
     // find the question
     // after findinf the question, check if answer is correct
-
-    if (answer == found.correct_answer) {
-
+    let activeQuestion = appState.questions
+    if (activeQuestion.correct_answer == answer) {
+      Pop.toast('You got it!', "success")
+      this.getQuestions()
+    } else {
+      Pop.toast('Not quite, try again next time!', 'error')
     }
   }
 

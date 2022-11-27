@@ -8,7 +8,7 @@ class AppState extends EventEmitter {
   values = loadState('values', [Value])
 
   /** @type {import('./Models/Question').Question[]} */
-  questions = []
+  questions = {}
   activeQuestion = null
 }
 
