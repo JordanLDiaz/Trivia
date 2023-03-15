@@ -5,39 +5,44 @@ import { Pop } from "../Utils/Pop.js";
 import { setHTML, setText } from "../Utils/Writer.js";
 
 
-function _drawQuestions() {
-  // Use Math.random() to create a random number, then multiply it by 10. Also wrap it in Math.floor... ex: Math.floor(Math.random() * 10)
-  let randomNumber = Math.floor(Math.random() * 10)
-  let question = appState.questions[randomNumber]
-  // let template = ''
-  // questions.forEach(q => template += q.QuestionTemplate)    commented out because we created randomNumber and let the questions = appstate.questions at the randomNumber
-  setHTML('questions', question.QuestionTemplate)
+function _drawQuestion() {
+  let newTrivia = appState.question
+  setHTML('active-question', newTrivia.QuestionTemplate)
 }
+
+function _drawScore(player) {
+  setText(`${player}-score`, appState[player])
+}
+
 export class QuestionsController {
   constructor() {
-    // console.log('hello from cards controller');
-    this.getQuestions()
-    appState.on('questions', _drawQuestions)
+    // console.log('hello from controller');
+    this.getQuestion()
+    appState.on('question', _drawQuestion)
+    appState.on('ta', () => _drawScore('ta'))
+    appState.on('class', () => _drawScore('class'))
   }
 
-  async getQuestions() {
+  async getQuestion() {
     try {
-      console.log('getting questions');
-      await questionsService.getQuestions()
-      console.log('got the questions');
-      let activeQuestion = appState.activeQuestion
+      await questionsService.getQuestion()
     } catch (error) {
+      console.error(error)
       Pop.toast(error.message, 'error')
     }
   }
 
-  findAnswer(id) {
-    // @ts-ignore
-    window.event.preventDefault()
-    // @ts-ignore
-    let form = window.event.target
-    let answer = form.answer.value
-    console.log(answer);
-    questionsService.findAnswer(answer, id)
+  findAnswer(answer) {
+    try {
+      questionsService.findAnswer(answer)
+      console.log(answer);
+    } catch (error) {
+      console.error(error)
+      Pop.error(error.message)
+    }
+  }
+
+  updateScore(name, score) {
+    questionsService.updateScore(name, score)
   }
 }

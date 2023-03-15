@@ -7,9 +7,10 @@ class AppState extends EventEmitter {
   /** @type {import('./Models/Value').Value[]} */
   values = loadState('values', [Value])
 
-  /** @type {import('./Models/Question').Question[]} */
-  questions = {}
-  activeQuestion = null
+  question = {}
+
+  ta = 0
+  class = 0
 }
 
 export const appState = new Proxy(new AppState(), {
